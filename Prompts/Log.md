@@ -1,0 +1,1 @@
+With the features mentioned in FEATURES.md, I want to develop a CLI tool that can convert any application into a Scaffolding template. That way I can replicate the entire project without a lot of effort. This should be config based. Use Golang and Bubble Tea. Make sure to develop core functionality and then develop commands to invoke it. 

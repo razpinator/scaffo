@@ -1,0 +1,28 @@
+# Binaries for the current OS and architecture
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Go build cache and module cache
+/pkg/
+/bin/
+/build/
+
+# IDE and editor specific files
+.idea/
+.vscode/
+*.swp
+*.bak
+*.log
+
+# Test cache
+/testdata/
+testoutput/
+
+# Go module vendor directory (if not committing vendor)
+/vendor/
+
+# Environment variables or sensitive data
+.env
+config.local.json
