@@ -23,6 +23,7 @@ scaffo init --config scaffold.config.json --from /path/to/project
 scaffo analyze --config scaffold.config.json
 scaffo build-template --config scaffold.config.json --output ./template-out
 scaffo generate --template ./template-out --out ./new-app
+scaffo build-generate --config scaffold.config.json --output ./template-out --out ./new-app
 ```
 
 You can also launch the Bubble Tea UI by running `go run ./cmd` and selecting a command interactively.
@@ -49,6 +50,9 @@ go test ./...
 
 # 6. Generate a new project from the template
  ./scaffo generate --template ./template-out --out ./new-app
+
+# 7. (Optional) Run build+generate in one step
+ ./scaffo build-generate --config scaffold.config.json --output ./template-out --out ./new-app
 ```
 
 Adjust the `--from`, `--template`, and `--out` flags to point at real projects once you move beyond the sample data. Each step prints diagnostic output so you can confirm that the functionality behaves as expected.

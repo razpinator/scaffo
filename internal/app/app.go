@@ -25,6 +25,8 @@ func Execute() {
 		BuildTemplateCommand(configPath, "./template-out")
 	case "generate":
 		GenerateCommand("./template-out", "./new-app")
+	case "build-generate":
+		BuildAndGenerateCommand(configPath, "./template-out", "./new-app")
 	default:
 		fmt.Println("Goodbye!")
 	}

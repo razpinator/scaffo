@@ -25,7 +25,7 @@ func main() {
 
 	if len(flag.Args()) == 0 {
 		fmt.Println("Usage: scaffo <command> [flags]")
-		fmt.Println("Commands: init, analyze, build-template, generate")
+		fmt.Println("Commands: init, analyze, build-template, generate, build-generate")
 		os.Exit(1)
 	}
 
@@ -39,6 +39,8 @@ func main() {
 		app.BuildTemplateCommand(configPath, outputPath)
 	case "generate":
 		app.GenerateCommand(templatePath, outPath)
+	case "build-generate":
+		app.BuildAndGenerateCommand(configPath, outputPath, outPath)
 	default:
 		fmt.Println("Unknown command:", cmd)
 		os.Exit(1)

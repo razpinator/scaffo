@@ -14,7 +14,7 @@ type model struct {
 
 func initialModel() model {
 	return model{
-		choices:  []string{"Init", "Analyze", "Build Template", "Generate", "Quit"},
+		choices:  []string{"Init", "Analyze", "Build Template", "Generate", "Build + Generate", "Quit"},
 		cursor:   0,
 		selected: -1,
 	}
@@ -29,7 +29,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.KeyMsg:
 		switch msg.String() {
 		case "ctrl+c", "q":
-			m.selected = 4
+			m.selected = len(m.choices) - 1
 			return m, tea.Quit
 		case "up", "k":
 			if m.cursor > 0 {
@@ -77,6 +77,8 @@ func RunUI() (string, error) {
 		return "build-template", nil
 	case 3:
 		return "generate", nil
+	case 4:
+		return "build-generate", nil
 	default:
 		return "quit", nil
 	}

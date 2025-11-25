@@ -185,6 +185,21 @@ func GenerateCommand(templatePath, outPath string) {
 	fmt.Printf("Would generate new project from %s into %s\n", templatePath, outPath)
 }
 
+// BuildAndGenerateCommand chains template building immediately followed by project generation.
+func BuildAndGenerateCommand(configPath, templatePath, outPath string) {
+	configPath = resolveConfigPath(configPath)
+	if strings.TrimSpace(templatePath) == "" {
+		templatePath = defaultTemplateOut
+	}
+	if strings.TrimSpace(outPath) == "" {
+		outPath = defaultGenerateOut
+	}
+
+	fmt.Println("Running build-template then generate in a single step...")
+	BuildTemplateCommand(configPath, templatePath)
+	GenerateCommand(templatePath, outPath)
+}
+
 func writeConfig(path string, cfg *Config) error {
 	f, err := os.Create(path)
 	if err != nil {
