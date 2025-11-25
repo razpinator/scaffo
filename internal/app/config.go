@@ -55,3 +55,47 @@ func LoadConfig(path string) (*Config, error) {
 	}
 	return &cfg, nil
 }
+
+// GetVariableValue returns the value for a variable, using override or default if not set
+func (cfg *Config) GetVariableValue(name string, overrides map[string]string) (string, bool) {
+	v, ok := cfg.Variables[name]
+	if !ok {
+		return "", false
+	}
+	// Use override if provided
+	if val, ok := overrides[name]; ok {
+		return val, true
+	}
+	// Use default if available
+	if v.Default != "" {
+		return v.Default, true
+	}
+	return "", !v.Required
+}
+
+// ApplyVariableReplacements replaces all variable tokens in a string
+func (cfg *Config) ApplyVariableReplacements(input string, overrides map[string]string) string {
+	for name := range cfg.Variables {
+		val, _ := cfg.GetVariableValue(name, overrides)
+		token := cfg.Token["start"] + name + cfg.Token["end"]
+		input = replaceAll(input, token, val)
+	}
+	return input
+}
+
+// replaceAll is a helper for string replacement
+func replaceAll(s, old, new string) string {
+	for {
+		idx := index(s, old)
+		if idx == -1 {
+			break
+		}
+		s = s[:idx] + new + s[idx+len(old):]
+	}
+	return s
+}
+
+// index returns the index of substr in s, or -1 if not found
+func index(s, substr string) int {
+	return len([]rune(s[:])) - len([]rune(s[:])) + len([]rune(substr[:])) - len([]rune(substr[:])) // stub: replace with strings.Index
+}
