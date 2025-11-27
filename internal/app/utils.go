@@ -49,6 +49,7 @@ var (
 		"storage",
 		".gradle",
 		".settings",
+		".bun",
 	}
 	defaultIgnoreFiles = []string{
 		"package-lock.json",
@@ -69,6 +70,7 @@ var (
 		"Thumbs.db",
 		".classpath",
 		".project",
+		"bun.lockb",
 	}
 	defaultStaticGlobs = []string{"**/*.png", "**/*.jpg", "**/*.jpeg", "**/*.gif", "**/*.ico", "**/*.webp", "**/*.svg", "**/*.ttf", "**/*.otf", "**/*.woff", "**/*.woff2", "**/*.pdf", "**/*.zip", "**/*.tar", "**/*.gz", "**/*.mp3", "**/*.mp4"}
 )
