@@ -39,8 +39,11 @@ func TestBuildTemplateAndGenerateIntegration(t *testing.T) {
 	}
 	t.Setenv("SCAFFO_PROJECT_NAME", "Generated App")
 	outPath := filepath.Join(root, "generated")
-	app.GenerateCommand(cfg.TemplateRoot, outPath)
-	generatedReadme := filepath.Join(outPath, "README.txt")
+	app.GenerateCommand(cfg.TemplateRoot, outPath, false, "")
+
+	// The output path is updated to match the project name
+	actualOutPath := filepath.Join(root, "Generated App")
+	generatedReadme := filepath.Join(actualOutPath, "README.txt")
 	data, err := os.ReadFile(generatedReadme)
 	if err != nil {
 		t.Fatalf("read generated README: %v", err)
@@ -48,7 +51,7 @@ func TestBuildTemplateAndGenerateIntegration(t *testing.T) {
 	if string(data) != "Project: Generated App Slug: generated-app" {
 		t.Fatalf("token replacement failed in generated project: %s", string(data))
 	}
-	if _, err := os.Stat(filepath.Join(outPath, "logo.png")); err != nil {
+	if _, err := os.Stat(filepath.Join(actualOutPath, "logo.png")); err != nil {
 		t.Fatalf("static file not generated: %v", err)
 	}
 }

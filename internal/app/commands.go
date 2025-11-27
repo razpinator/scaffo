@@ -236,6 +236,9 @@ func BuildTemplateCommand(configPath, outputPath string) {
 		return
 	}
 
+	// Ensure the config file itself is not copied into the template
+	cfg.IgnoreFiles = append(cfg.IgnoreFiles, filepath.Base(configPath))
+
 	if err := buildTemplate(cfg, outputPath); err != nil {
 		fmt.Println("Error building template:", err)
 		return
@@ -344,7 +347,7 @@ func buildTemplate(cfg *Config, outputPath string) error {
 }
 
 // GenerateCommand materializes a new project from a built template.
-func GenerateCommand(templatePath, outPath string) {
+func GenerateCommand(templatePath, outPath string, copyConfig bool, configPath string) {
 	if strings.TrimSpace(templatePath) == "" {
 		templatePath = defaultTemplateOut
 	}
@@ -377,10 +380,39 @@ func GenerateCommand(templatePath, outPath string) {
 		return
 	}
 
+	// If a "name" variable is provided, use it as the directory name for the new project
+	var nameVar string
+	if val, ok := values["name"]; ok {
+		nameVar = val
+	} else if val, ok := values["projectName"]; ok {
+		nameVar = val
+	} else if val, ok := values["PROJECT_NAME"]; ok {
+		nameVar = val
+	}
+
+	if strings.TrimSpace(nameVar) != "" {
+		outPath = filepath.Join(filepath.Dir(outPath), strings.TrimSpace(nameVar))
+	}
+
 	if err := generateProject(templatePath, outPath, meta, values); err != nil {
 		fmt.Println("Error generating project:", err)
 		return
 	}
+
+	if copyConfig && configPath != "" {
+		src, err := os.ReadFile(configPath)
+		if err != nil {
+			fmt.Printf("Warning: Could not read config file to copy: %v\n", err)
+		} else {
+			dstPath := filepath.Join(outPath, filepath.Base(configPath))
+			if err := os.WriteFile(dstPath, src, 0644); err != nil {
+				fmt.Printf("Warning: Could not write config file: %v\n", err)
+			} else {
+				fmt.Printf("Copied config file to %s\n", dstPath)
+			}
+		}
+	}
+
 	fmt.Printf("Project generated at %s\n", outPath)
 }
 
@@ -447,7 +479,7 @@ func generateProject(templatePath, outPath string, meta *templateMetadata, value
 }
 
 // BuildAndGenerateCommand chains template building immediately followed by project generation.
-func BuildAndGenerateCommand(configPath, templatePath, outPath string) {
+func BuildAndGenerateCommand(configPath, templatePath, outPath string, copyConfig bool) {
 	configPath = resolveConfigPath(configPath)
 	if strings.TrimSpace(templatePath) == "" {
 		templatePath = defaultTemplateOut
@@ -458,7 +490,7 @@ func BuildAndGenerateCommand(configPath, templatePath, outPath string) {
 
 	fmt.Println("Running build-template then generate in a single step...")
 	BuildTemplateCommand(configPath, templatePath)
-	GenerateCommand(templatePath, outPath)
+	GenerateCommand(templatePath, outPath, copyConfig, configPath)
 }
 
 func applyRenameRules(rel string, rules []RenameRule) string {

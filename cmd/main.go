@@ -44,15 +44,17 @@ func main() {
 		fs.StringVar(&templatePath, "template", "", "Path to template directory")
 		fs.StringVar(&outPath, "out", "", "Destination for generated project")
 		mustParse(fs, args)
-		app.GenerateCommand(templatePath, outPath)
+		app.GenerateCommand(templatePath, outPath, false, "")
 	case "build-generate":
 		var configPath, templatePath, outPath string
+		var copyConfig bool
 		fs := flag.NewFlagSet("build-generate", flag.ExitOnError)
 		fs.StringVar(&configPath, "config", "scaffold.config.json", "Path to config file")
 		fs.StringVar(&templatePath, "output", "", "Intermediary template output path")
 		fs.StringVar(&outPath, "out", "", "Destination for generated project")
+		fs.BoolVar(&copyConfig, "copy-config", false, "Copy scaffold.config.json to the generated project")
 		mustParse(fs, args)
-		app.BuildAndGenerateCommand(configPath, templatePath, outPath)
+		app.BuildAndGenerateCommand(configPath, templatePath, outPath, copyConfig)
 	default:
 		fmt.Println("Unknown command:", cmd)
 		printUsage()
