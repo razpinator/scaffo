@@ -19,7 +19,7 @@ import (
 )
 
 const (
-	defaultConfigPath    = "scaffold.config.yaml"
+	defaultConfigPath    = "scaffold.config.json"
 	defaultTemplateOut   = "./template-out"
 	defaultGenerateOut   = "./new-app"
 	templateMetadataFile = ".scaffo-template.json"

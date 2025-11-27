@@ -16,7 +16,7 @@ func TestBuildTemplateAndGenerateIntegration(t *testing.T) {
 	if err := os.WriteFile(filepath.Join(root, "logo.png"), []byte{0x89, 0x50, 0x4e}, 0o644); err != nil { // pseudo-binary header
 		t.Fatalf("write static file: %v", err)
 	}
-	configPath := filepath.Join(root, "scaffold.config.yaml")
+	configPath := filepath.Join(root, "scaffold.config.json")
 	cfg := &app.Config{
 		SourceRoot:    root,
 		TemplateRoot:  filepath.Join(root, "template-out"),

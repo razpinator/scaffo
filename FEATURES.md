@@ -5,7 +5,7 @@
 ## 1. Core Concepts & Config
 
 - **Config file support** (YAML/JSON/TOML)
-  - `scaffold.config.yaml` at project root
+  - `scaffold.config.json` at project root
   - Optional CLI flag `--config`
 - **Source & output roots**
   - `sourceRoot`: path to the “real” project
@@ -98,7 +98,7 @@
 
 - **init command**
   - `scaffold init --from /path/to/app`
-  - Creates default `scaffold.config.yaml` with:
+  - Creates default `scaffold.config.json` with:
     - Suggested ignore patterns
     - Empty or auto-detected variable list
     - Default token delimiters

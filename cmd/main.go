@@ -21,20 +21,20 @@ func main() {
 	case "init":
 		var configPath, sourceRoot string
 		fs := flag.NewFlagSet("init", flag.ExitOnError)
-		fs.StringVar(&configPath, "config", "scaffold.config.yaml", "Path to config file")
+		fs.StringVar(&configPath, "config", "scaffold.config.json", "Path to config file")
 		fs.StringVar(&sourceRoot, "from", "", "Source project root")
 		mustParse(fs, args)
 		app.InitCommand(configPath, sourceRoot)
 	case "analyze":
 		var configPath string
 		fs := flag.NewFlagSet("analyze", flag.ExitOnError)
-		fs.StringVar(&configPath, "config", "scaffold.config.yaml", "Path to config file")
+		fs.StringVar(&configPath, "config", "scaffold.config.json", "Path to config file")
 		mustParse(fs, args)
 		app.AnalyzeCommand(configPath)
 	case "build-template":
 		var configPath, outputPath string
 		fs := flag.NewFlagSet("build-template", flag.ExitOnError)
-		fs.StringVar(&configPath, "config", "scaffold.config.yaml", "Path to config file")
+		fs.StringVar(&configPath, "config", "scaffold.config.json", "Path to config file")
 		fs.StringVar(&outputPath, "output", "", "Output path for template artifacts")
 		mustParse(fs, args)
 		app.BuildTemplateCommand(configPath, outputPath)
@@ -48,7 +48,7 @@ func main() {
 	case "build-generate":
 		var configPath, templatePath, outPath string
 		fs := flag.NewFlagSet("build-generate", flag.ExitOnError)
-		fs.StringVar(&configPath, "config", "scaffold.config.yaml", "Path to config file")
+		fs.StringVar(&configPath, "config", "scaffold.config.json", "Path to config file")
 		fs.StringVar(&templatePath, "output", "", "Intermediary template output path")
 		fs.StringVar(&outPath, "out", "", "Destination for generated project")
 		mustParse(fs, args)
