@@ -43,12 +43,19 @@ var (
 		"venv",
 		".venv",
 		"TestResults",
+		"tmp",
+		"log",
+		".bundle",
+		"storage",
+		".gradle",
+		".settings",
 	}
 	defaultIgnoreFiles = []string{
 		"package-lock.json",
 		"yarn.lock",
 		"pnpm-lock.yaml",
 		"go.sum",
+		"Gemfile.lock",
 		"*.log",
 		"*.user",
 		"*.suo",
@@ -56,8 +63,12 @@ var (
 		"*.dll",
 		"*.pdb",
 		"*.exe",
+		"*.sqlite3",
+		"master.key",
 		".DS_Store",
 		"Thumbs.db",
+		".classpath",
+		".project",
 	}
 	defaultStaticGlobs = []string{"**/*.png", "**/*.jpg", "**/*.jpeg", "**/*.gif", "**/*.ico", "**/*.webp", "**/*.svg", "**/*.ttf", "**/*.otf", "**/*.woff", "**/*.woff2", "**/*.pdf", "**/*.zip", "**/*.tar", "**/*.gz", "**/*.mp3", "**/*.mp4"}
 )
