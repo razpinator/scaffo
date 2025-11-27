@@ -73,6 +73,12 @@ func LoadConfig(path string) (*Config, error) {
 	}
 
 	cfg.applyDefaults()
+
+	// Resolve SourceRoot relative to the config file path
+	if !filepath.IsAbs(cfg.SourceRoot) {
+		cfg.SourceRoot = filepath.Join(filepath.Dir(path), cfg.SourceRoot)
+	}
+
 	return &cfg, nil
 }
 

@@ -32,12 +32,13 @@ func main() {
 		mustParse(fs, args)
 		app.AnalyzeCommand(configPath)
 	case "build-template":
-		var configPath, outputPath string
+		var configPath, sourceRoot, outputPath string
 		fs := flag.NewFlagSet("build-template", flag.ExitOnError)
 		fs.StringVar(&configPath, "config", "scaffold.config.json", "Path to config file")
+		fs.StringVar(&sourceRoot, "from", "", "Source project root (default: .)")
 		fs.StringVar(&outputPath, "output", "", "Output path for template artifacts")
 		mustParse(fs, args)
-		app.BuildTemplateCommand(configPath, outputPath)
+		app.BuildTemplateCommand(configPath, sourceRoot, outputPath)
 	case "generate":
 		var templatePath, outPath string
 		fs := flag.NewFlagSet("generate", flag.ExitOnError)
@@ -46,15 +47,16 @@ func main() {
 		mustParse(fs, args)
 		app.GenerateCommand(templatePath, outPath, false, "")
 	case "run":
-		var configPath, templatePath, outPath string
+		var configPath, sourceRoot, templatePath, outPath string
 		var copyConfig bool
 		fs := flag.NewFlagSet("run", flag.ExitOnError)
 		fs.StringVar(&configPath, "config", "scaffold.config.json", "Path to config file")
+		fs.StringVar(&sourceRoot, "from", "", "Source project root (default: .)")
 		fs.StringVar(&templatePath, "output", "", "Intermediary template output path")
 		fs.StringVar(&outPath, "out", "", "Destination for generated project")
 		fs.BoolVar(&copyConfig, "copy-config", false, "Copy scaffold.config.json to the generated project")
 		mustParse(fs, args)
-		app.RunCommand(configPath, templatePath, outPath, copyConfig)
+		app.RunCommand(configPath, sourceRoot, templatePath, outPath, copyConfig)
 	default:
 		fmt.Println("Unknown command:", cmd)
 		printUsage()

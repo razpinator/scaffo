@@ -10,7 +10,7 @@ import (
 )
 
 // BuildTemplateCommand converts the source project into a reusable template tree.
-func BuildTemplateCommand(configPath, outputPath string) {
+func BuildTemplateCommand(configPath, sourceRoot, outputPath string) {
 	configPath = resolveConfigPath(configPath)
 	if strings.TrimSpace(outputPath) == "" {
 		outputPath = defaultTemplateOut
@@ -20,6 +20,11 @@ func BuildTemplateCommand(configPath, outputPath string) {
 	if err != nil {
 		fmt.Println("Error loading config:", err)
 		return
+	}
+
+	// Override source root if provided
+	if strings.TrimSpace(sourceRoot) != "" {
+		cfg.SourceRoot = sourceRoot
 	}
 
 	// Ensure the config file itself is not copied into the template

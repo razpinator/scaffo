@@ -23,8 +23,8 @@ func TestConfigSaveAndLoadJSON(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Load failed: %v", err)
 	}
-	if loaded.SourceRoot != "." {
-		t.Fatalf("expected SourceRoot '.', got %s", loaded.SourceRoot)
+	if loaded.SourceRoot != tmp {
+		t.Fatalf("expected SourceRoot '%s', got %s", tmp, loaded.SourceRoot)
 	}
 	if len(loaded.IgnoreFolders) == 0 || len(loaded.IgnoreFiles) == 0 || len(loaded.StaticFiles) == 0 {
 		t.Fatalf("expected defaults for ignore/static lists to be populated")
@@ -46,8 +46,9 @@ func TestConfigSaveAndLoadYAML(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Load failed: %v", err)
 	}
-	if loaded.SourceRoot != "src" || loaded.TemplateRoot != "tmpl" {
-		t.Fatalf("expected persisted values; got %+v", loaded)
+	expectedSource := filepath.Join(tmp, "src")
+	if loaded.SourceRoot != expectedSource || loaded.TemplateRoot != "tmpl" {
+		t.Fatalf("expected SourceRoot '%s' and TemplateRoot 'tmpl'; got %+v", expectedSource, loaded)
 	}
 	if loaded.Token["start"] != "[[" || loaded.Token["end"] != "]]" {
 		t.Fatalf("custom token delimiters not preserved")

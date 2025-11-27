@@ -32,7 +32,7 @@ func TestBuildTemplateAndGenerateIntegration(t *testing.T) {
 	if err := cfg.Save(configPath); err != nil {
 		t.Fatalf("save config: %v", err)
 	}
-	app.BuildTemplateCommand(configPath, cfg.TemplateRoot)
+	app.BuildTemplateCommand(configPath, "", cfg.TemplateRoot)
 	metaPath := filepath.Join(cfg.TemplateRoot, ".scaffo-template.json")
 	if _, err := os.Stat(metaPath); err != nil {
 		t.Fatalf("template metadata missing: %v", err)

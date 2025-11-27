@@ -122,21 +122,22 @@ func applyRenameRules(rel string, rules []RenameRule) string {
 	if len(rules) == 0 {
 		return rel
 	}
+	// Apply rules in order. Note: this simple implementation might need improvement
+	// if multiple rules overlap, but for now it iterates through all rules.
+	// A more robust approach would be to tokenize the path and replace segments.
+	result := rel
 	for _, rule := range rules {
-		from := strings.TrimPrefix(filepath.ToSlash(rule.From), "./")
+		from := rule.From
+		to := rule.To
 		if from == "" {
 			continue
 		}
-		to := filepath.ToSlash(rule.To)
-		if rel == from {
-			return to
-		}
-		if strings.HasPrefix(rel, from+"/") {
-			suffix := strings.TrimPrefix(rel, from)
-			return to + suffix
-		}
+		// Simple string replacement for path segments
+		// This handles "MyProject/File.cs" -> "{{PROJECT_NAME}}/File.cs"
+		// and "File.MyProject.cs" -> "File.{{PROJECT_NAME}}.cs"
+		result = strings.ReplaceAll(result, from, to)
 	}
-	return rel
+	return result
 }
 
 func matchesPatternList(path string, patterns []string) bool {

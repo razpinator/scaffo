@@ -22,11 +22,11 @@ func Execute() {
 	case "analyze":
 		AnalyzeCommand(configPath)
 	case "build-template":
-		BuildTemplateCommand(configPath, "./template-out")
+		BuildTemplateCommand(configPath, sourceRoot, "./template-out")
 	case "generate":
 		GenerateCommand("./template-out", "./new-app", false, "")
 	case "run":
-		RunCommand(configPath, "./template-out", "./new-app", false)
+		RunCommand(configPath, sourceRoot, "./template-out", "./new-app", false)
 	default:
 		fmt.Println("Goodbye!")
 	}
