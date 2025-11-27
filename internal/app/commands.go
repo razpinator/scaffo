@@ -54,6 +54,17 @@ func MatchIgnore(path string, isDir bool, ignoreFolders, ignoreFiles []string, s
 				return true
 			}
 		}
+		// Check if any parent directory matches ignoreFolders
+		parts := strings.Split(path, "/")
+		for i := 0; i < len(parts)-1; i++ {
+			subPath := strings.Join(parts[:i+1], "/")
+			baseName := parts[i]
+			for _, pat := range ignoreFolders {
+				if matchGlob(baseName, pat) || matchGlob(subPath, pat) {
+					return true
+				}
+			}
+		}
 	}
 	for _, pat := range scaffoldIgnorePatterns {
 		if matchGlob(path, pat) || matchGlob(base, pat) {

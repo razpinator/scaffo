@@ -10,7 +10,7 @@ import (
 
 func TestBuildTemplateAndGenerateIntegration(t *testing.T) {
 	root := t.TempDir()
-	if err := os.WriteFile(filepath.Join(root, "README.txt"), []byte("Project: {{PROJECT_NAME}}"), 0o644); err != nil {
+	if err := os.WriteFile(filepath.Join(root, "README.txt"), []byte("Project: {{PROJECT_NAME}} Slug: {{PROJECT_SLUG}}"), 0o644); err != nil {
 		t.Fatalf("write templated file: %v", err)
 	}
 	if err := os.WriteFile(filepath.Join(root, "logo.png"), []byte{0x89, 0x50, 0x4e}, 0o644); err != nil { // pseudo-binary header
@@ -26,6 +26,7 @@ func TestBuildTemplateAndGenerateIntegration(t *testing.T) {
 		Token:         map[string]string{"start": "{{", "end": "}}"},
 		Variables: map[string]app.Variable{
 			"PROJECT_NAME": {Type: "string", Required: true, Default: "Fallback Name"},
+			"PROJECT_SLUG": {Type: "string", Required: true, From: "PROJECT_NAME", Transform: "slug-kebab"},
 		},
 	}
 	if err := cfg.Save(configPath); err != nil {
@@ -36,9 +37,7 @@ func TestBuildTemplateAndGenerateIntegration(t *testing.T) {
 	if _, err := os.Stat(metaPath); err != nil {
 		t.Fatalf("template metadata missing: %v", err)
 	}
-	if err := os.Setenv("SCAFFO_PROJECT_NAME", "GeneratedApp"); err != nil {
-		t.Fatalf("set env: %v", err)
-	}
+	t.Setenv("SCAFFO_PROJECT_NAME", "Generated App")
 	outPath := filepath.Join(root, "generated")
 	app.GenerateCommand(cfg.TemplateRoot, outPath)
 	generatedReadme := filepath.Join(outPath, "README.txt")
@@ -46,7 +45,7 @@ func TestBuildTemplateAndGenerateIntegration(t *testing.T) {
 	if err != nil {
 		t.Fatalf("read generated README: %v", err)
 	}
-	if string(data) != "Project: GeneratedApp" {
+	if string(data) != "Project: Generated App Slug: generated-app" {
 		t.Fatalf("token replacement failed in generated project: %s", string(data))
 	}
 	if _, err := os.Stat(filepath.Join(outPath, "logo.png")); err != nil {
