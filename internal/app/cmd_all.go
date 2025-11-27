@@ -5,8 +5,8 @@ import (
 	"strings"
 )
 
-// BuildAndGenerateCommand chains template building immediately followed by project generation.
-func BuildAndGenerateCommand(configPath, templatePath, outPath string, copyConfig bool) {
+// RunCommand chains template building immediately followed by project generation.
+func RunCommand(configPath, templatePath, outPath string, copyConfig bool) {
 	configPath = resolveConfigPath(configPath)
 	if strings.TrimSpace(templatePath) == "" {
 		templatePath = defaultTemplateOut

@@ -45,16 +45,16 @@ func main() {
 		fs.StringVar(&outPath, "out", "", "Destination for generated project")
 		mustParse(fs, args)
 		app.GenerateCommand(templatePath, outPath, false, "")
-	case "build-generate":
+	case "run":
 		var configPath, templatePath, outPath string
 		var copyConfig bool
-		fs := flag.NewFlagSet("build-generate", flag.ExitOnError)
+		fs := flag.NewFlagSet("run", flag.ExitOnError)
 		fs.StringVar(&configPath, "config", "scaffold.config.json", "Path to config file")
 		fs.StringVar(&templatePath, "output", "", "Intermediary template output path")
 		fs.StringVar(&outPath, "out", "", "Destination for generated project")
 		fs.BoolVar(&copyConfig, "copy-config", false, "Copy scaffold.config.json to the generated project")
 		mustParse(fs, args)
-		app.BuildAndGenerateCommand(configPath, templatePath, outPath, copyConfig)
+		app.RunCommand(configPath, templatePath, outPath, copyConfig)
 	default:
 		fmt.Println("Unknown command:", cmd)
 		printUsage()
@@ -75,5 +75,5 @@ func printUsage() {
 	fmt.Println("  analyze --config <path>")
 	fmt.Println("  build-template --config <path> [--output <dir>]")
 	fmt.Println("  generate --template <dir> --out <dir>")
-	fmt.Println("  build-generate --config <path> [--output <tmp>] --out <dir>")
+	fmt.Println("  run --config <path> [--output <tmp>] --out <dir>")
 }

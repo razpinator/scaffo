@@ -14,7 +14,7 @@ type model struct {
 
 func initialModel() model {
 	return model{
-		choices:  []string{"Init", "Analyze", "Build Template", "Generate", "Build + Generate", "Quit"},
+		choices:  []string{"Init", "Analyze", "Build Template", "Generate", "Run", "Quit"},
 		cursor:   0,
 		selected: -1,
 	}
@@ -78,7 +78,7 @@ func RunUI() (string, error) {
 	case 3:
 		return "generate", nil
 	case 4:
-		return "build-generate", nil
+		return "run", nil
 	default:
 		return "quit", nil
 	}
