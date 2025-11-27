@@ -2,7 +2,13 @@ package app
 
 import (
 	"encoding/json"
+	"errors"
+	"io"
 	"os"
+	"path/filepath"
+	"strings"
+
+	"gopkg.in/yaml.v3"
 )
 
 type Variable struct {
@@ -48,12 +54,52 @@ func LoadConfig(path string) (*Config, error) {
 		return nil, err
 	}
 	defer f.Close()
-	var cfg Config
-	dec := json.NewDecoder(f)
-	if err := dec.Decode(&cfg); err != nil {
+
+	data, err := io.ReadAll(f)
+	if err != nil {
 		return nil, err
 	}
+
+	var cfg Config
+	switch strings.ToLower(filepath.Ext(path)) {
+	case ".yaml", ".yml":
+		if err := yaml.Unmarshal(data, &cfg); err != nil {
+			return nil, err
+		}
+	default:
+		if err := json.Unmarshal(data, &cfg); err != nil {
+			return nil, err
+		}
+	}
+
+	cfg.applyDefaults()
 	return &cfg, nil
+}
+
+func (cfg *Config) Save(path string) error {
+	if cfg == nil {
+		return errors.New("config is nil")
+	}
+	dir := filepath.Dir(path)
+	if dir != "." && dir != "" {
+		if err := os.MkdirAll(dir, 0o755); err != nil {
+			return err
+		}
+	}
+	var (
+		data []byte
+		err  error
+	)
+	switch strings.ToLower(filepath.Ext(path)) {
+	case ".yaml", ".yml":
+		data, err = yaml.Marshal(cfg)
+	default:
+		data, err = json.MarshalIndent(cfg, "", "  ")
+	}
+	if err != nil {
+		return err
+	}
+	return os.WriteFile(path, data, 0o644)
 }
 
 // GetVariableValue returns the value for a variable, using override or default if not set
@@ -75,27 +121,49 @@ func (cfg *Config) GetVariableValue(name string, overrides map[string]string) (s
 
 // ApplyVariableReplacements replaces all variable tokens in a string
 func (cfg *Config) ApplyVariableReplacements(input string, overrides map[string]string) string {
+	start, end := cfg.tokenDelimiters()
 	for name := range cfg.Variables {
 		val, _ := cfg.GetVariableValue(name, overrides)
-		token := cfg.Token["start"] + name + cfg.Token["end"]
-		input = replaceAll(input, token, val)
+		token := start + name + end
+		input = strings.ReplaceAll(input, token, val)
 	}
 	return input
 }
 
-// replaceAll is a helper for string replacement
-func replaceAll(s, old, new string) string {
-	for {
-		idx := index(s, old)
-		if idx == -1 {
-			break
+func (cfg *Config) tokenDelimiters() (string, string) {
+	start := "{{"
+	end := "}}"
+	if cfg.Token != nil {
+		if v := strings.TrimSpace(cfg.Token["start"]); v != "" {
+			start = v
 		}
-		s = s[:idx] + new + s[idx+len(old):]
+		if v := strings.TrimSpace(cfg.Token["end"]); v != "" {
+			end = v
+		}
 	}
-	return s
+	return start, end
 }
 
-// index returns the index of substr in s, or -1 if not found
-func index(s, substr string) int {
-	return len([]rune(s[:])) - len([]rune(s[:])) + len([]rune(substr[:])) - len([]rune(substr[:])) // stub: replace with strings.Index
+func (cfg *Config) applyDefaults() {
+	if cfg.Token == nil {
+		cfg.Token = map[string]string{"start": "{{", "end": "}}"}
+	}
+	if strings.TrimSpace(cfg.SourceRoot) == "" {
+		cfg.SourceRoot = "."
+	}
+	if strings.TrimSpace(cfg.TemplateRoot) == "" {
+		cfg.TemplateRoot = defaultTemplateOut
+	}
+	if len(cfg.IgnoreFolders) == 0 {
+		cfg.IgnoreFolders = append([]string{}, defaultIgnoreFolders...)
+	}
+	if len(cfg.IgnoreFiles) == 0 {
+		cfg.IgnoreFiles = append([]string{}, defaultIgnoreFiles...)
+	}
+	if len(cfg.StaticFiles) == 0 {
+		cfg.StaticFiles = append([]string{}, defaultStaticGlobs...)
+	}
+	if cfg.Variables == nil {
+		cfg.Variables = map[string]Variable{}
+	}
 }
