@@ -25,9 +25,41 @@ const (
 )
 
 var (
-	defaultIgnoreFolders = []string{".git", "node_modules", ".vscode", "dist", "coverage", "logs"}
-	defaultIgnoreFiles   = []string{"package-lock.json", "yarn.lock", "*.log"}
-	defaultStaticGlobs   = []string{"**/*.png", "**/*.jpg", "**/*.jpeg", "**/*.gif", "**/*.ico", "**/*.webp", "**/*.svg", "**/*.ttf", "**/*.otf", "**/*.woff", "**/*.woff2", "**/*.pdf", "**/*.zip", "**/*.tar", "**/*.gz", "**/*.mp3", "**/*.mp4"}
+	defaultIgnoreFolders = []string{
+		".git",
+		"node_modules",
+		".vscode",
+		".idea",
+		".vs",
+		"dist",
+		"build",
+		"coverage",
+		"logs",
+		"bin",
+		"obj",
+		"target",
+		"__pycache__",
+		".pytest_cache",
+		"venv",
+		".venv",
+		"TestResults",
+	}
+	defaultIgnoreFiles = []string{
+		"package-lock.json",
+		"yarn.lock",
+		"pnpm-lock.yaml",
+		"go.sum",
+		"*.log",
+		"*.user",
+		"*.suo",
+		"*.userprefs",
+		"*.dll",
+		"*.pdb",
+		"*.exe",
+		".DS_Store",
+		"Thumbs.db",
+	}
+	defaultStaticGlobs = []string{"**/*.png", "**/*.jpg", "**/*.jpeg", "**/*.gif", "**/*.ico", "**/*.webp", "**/*.svg", "**/*.ttf", "**/*.otf", "**/*.woff", "**/*.woff2", "**/*.pdf", "**/*.zip", "**/*.tar", "**/*.gz", "**/*.mp3", "**/*.mp4"}
 )
 
 // MatchIgnore checks if a file/folder should be ignored based on config ignore patterns and .scaffoldignore.
