@@ -57,6 +57,7 @@ var (
 		"pnpm-lock.yaml",
 		"go.sum",
 		"Gemfile.lock",
+		"Cargo.lock",
 		"*.log",
 		"*.user",
 		"*.suo",
