@@ -8,7 +8,7 @@ import (
 	"github.com/razpinator/scaffo/internal/app"
 )
 
-const Version = "0.0.2"
+const Version = "0.0.3"
 
 func main() {
 	if len(os.Args) < 2 {
