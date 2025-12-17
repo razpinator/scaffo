@@ -69,8 +69,8 @@ func InitCommand(configPath, sourceRoot string) {
 	}
 
 	cfg := Config{
-		SourceRoot:    configSourceRoot,
-		TemplateRoot:  defaultTemplateOut,
+		SourceRoot: configSourceRoot,
+		// TemplateRoot:  deprecated,
 		Token:         map[string]string{"start": "{{", "end": "}}"},
 		IgnoreFolders: defaultIgnoreFolders,
 		IgnoreFiles:   defaultIgnoreFiles,

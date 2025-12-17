@@ -157,9 +157,7 @@ func (cfg *Config) applyDefaults() {
 	if strings.TrimSpace(cfg.SourceRoot) == "" {
 		cfg.SourceRoot = "."
 	}
-	if strings.TrimSpace(cfg.TemplateRoot) == "" {
-		cfg.TemplateRoot = defaultTemplateOut
-	}
+	// TemplateRoot is deprecated/unused in simplified version
 	if len(cfg.IgnoreFolders) == 0 {
 		cfg.IgnoreFolders = append([]string{}, defaultIgnoreFolders...)
 	}

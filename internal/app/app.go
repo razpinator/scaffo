@@ -1,33 +1,56 @@
 package app
 
 import (
+	"bufio"
 	"fmt"
 	"os"
+	"strings"
 )
 
 // Execute runs the Bubble Tea menu and dispatches to the matching command.
 func Execute() {
-	selected, err := RunUI()
-	if err != nil {
-		fmt.Println("Error running Bubble Tea UI:", err)
-		os.Exit(1)
-	}
+	for {
+		selected, arg, err := RunUI()
+		if err != nil {
+			fmt.Println("Error running Bubble Tea UI:", err)
+			os.Exit(1)
+		}
 
-	configPath := "scaffold.config.json"
-	sourceRoot := "./"
+		if selected == "quit" {
+			fmt.Println("Goodbye!")
+			return
+		}
 
-	switch selected {
-	case "init":
-		InitCommand(configPath, sourceRoot)
-	case "analyze":
-		AnalyzeCommand(configPath)
-	case "build-template":
-		BuildTemplateCommand(configPath, sourceRoot, "./template-out")
-	case "generate":
-		GenerateCommand("./template-out", "./new-app", false, "")
-	case "run":
-		RunCommand(configPath, sourceRoot, "./template-out", "./new-app", false)
-	default:
-		fmt.Println("Goodbye!")
+		configPath := "scaffold.config.json"
+		sourceRoot := "./"
+
+		switch selected {
+		case "init":
+			InitCommand(configPath, sourceRoot)
+			pause()
+		case "run":
+			if arg != "" {
+				if arg == "Other (enter path)" {
+					fmt.Print("Enter source path: ")
+					reader := bufio.NewReader(os.Stdin)
+					text, _ := reader.ReadString('\n')
+					sourceRoot = strings.TrimSpace(text)
+				} else {
+					sourceRoot = arg
+				}
+			}
+			// RunCommand handles default outPath and prompting for variables
+			RunCommand(configPath, sourceRoot, "", false)
+			pause()
+		default:
+			// Should not happen if RunUI returns valid commands or quit
+			fmt.Println("Goodbye!")
+			return
+		}
 	}
+}
+
+func pause() {
+	fmt.Println("\nPress Enter to return to menu...")
+	bufio.NewReader(os.Stdin).ReadBytes('\n')
 }

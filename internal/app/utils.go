@@ -2,7 +2,6 @@ package app
 
 import (
 	"bufio"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
@@ -18,10 +17,8 @@ import (
 )
 
 const (
-	defaultConfigPath    = "scaffold.config.json"
-	defaultTemplateOut   = "./template-out"
-	defaultGenerateOut   = "./new-app"
-	templateMetadataFile = ".scaffo-template.json"
+	defaultConfigPath  = "scaffold.config.json"
+	defaultGenerateOut = "./new-app"
 )
 
 var (
@@ -414,35 +411,102 @@ func defaultTokenDelims(token map[string]string) (string, string) {
 	return start, end
 }
 
-func loadTemplateMetadata(path string) (*templateMetadata, error) {
-	f, err := os.Open(filepath.Join(path, templateMetadataFile))
-	if err != nil {
-		return nil, err
+func splitIntoWords(s string) []string {
+	var words []string
+	var currentWord strings.Builder
+	
+	runes := []rune(s)
+	for i, r := range runes {
+		if unicode.IsLetter(r) || unicode.IsDigit(r) {
+			if i > 0 && unicode.IsLower(runes[i-1]) && unicode.IsUpper(r) {
+				if currentWord.Len() > 0 {
+					words = append(words, currentWord.String())
+					currentWord.Reset()
+				}
+			}
+			currentWord.WriteRune(r)
+		} else {
+			if currentWord.Len() > 0 {
+				words = append(words, currentWord.String())
+				currentWord.Reset()
+			}
+		}
 	}
-	defer f.Close()
-	var meta templateMetadata
-	if err := json.NewDecoder(f).Decode(&meta); err != nil {
-		return nil, err
+	if currentWord.Len() > 0 {
+		words = append(words, currentWord.String())
 	}
-	if meta.Token == nil {
-		meta.Token = map[string]string{"start": "{{", "end": "}}"}
-	}
-	if meta.Variables == nil {
-		meta.Variables = map[string]Variable{}
-	}
-	return &meta, nil
+	return words
 }
 
-func writeTemplateMetadata(path string, meta *templateMetadata) error {
-	if meta == nil {
-		return errors.New("template metadata is nil")
+func toPascalCase(words []string) string {
+	var b strings.Builder
+	for _, w := range words {
+		if len(w) > 0 {
+			r, size := utf8.DecodeRuneInString(w)
+			b.WriteRune(unicode.ToUpper(r))
+			b.WriteString(strings.ToLower(w[size:]))
+		}
 	}
-	f, err := os.Create(filepath.Join(path, templateMetadataFile))
-	if err != nil {
-		return err
+	return b.String()
+}
+
+func toCamelCase(words []string) string {
+	if len(words) == 0 {
+		return ""
 	}
-	defer f.Close()
-	enc := json.NewEncoder(f)
-	enc.SetIndent("", "  ")
-	return enc.Encode(meta)
+	var b strings.Builder
+	b.WriteString(strings.ToLower(words[0]))
+	for _, w := range words[1:] {
+		if len(w) > 0 {
+			r, size := utf8.DecodeRuneInString(w)
+			b.WriteRune(unicode.ToUpper(r))
+			b.WriteString(strings.ToLower(w[size:]))
+		}
+	}
+	return b.String()
+}
+
+func toSnakeCase(words []string) string {
+	var b strings.Builder
+	for i, w := range words {
+		if i > 0 {
+			b.WriteRune('_')
+		}
+		b.WriteString(strings.ToLower(w))
+	}
+	return b.String()
+}
+
+func toKebabCase(words []string) string {
+	var b strings.Builder
+	for i, w := range words {
+		if i > 0 {
+			b.WriteRune('-')
+		}
+		b.WriteString(strings.ToLower(w))
+	}
+	return b.String()
+}
+
+func toScreamingSnakeCase(words []string) string {
+	var b strings.Builder
+	for i, w := range words {
+		if i > 0 {
+			b.WriteRune('_')
+		}
+		b.WriteString(strings.ToUpper(w))
+	}
+	return b.String()
+}
+
+func generateVariations(name string) map[string]string {
+	words := splitIntoWords(name)
+	return map[string]string{
+		"Original":       name,
+		"PascalCase":     toPascalCase(words),
+		"camelCase":      toCamelCase(words),
+		"snake_case":     toSnakeCase(words),
+		"kebab-case":     toKebabCase(words),
+		"SCREAMING_CASE": toScreamingSnakeCase(words),
+	}
 }
