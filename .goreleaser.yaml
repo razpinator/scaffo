@@ -88,3 +88,18 @@ brews:
 
     test: |
       system "#{bin}/scaffo --version"
+
+# Winget support
+winget:
+  - name: scaffo
+    publisher: razpinator
+    license: MIT
+    license_url: "https://github.com/razpinator/scaffo/blob/main/LICENSE"
+    repository:
+      owner: razpinator
+      name: winget-pkgs
+      token: "{{ .Env.WINGET_GITHUB_TOKEN }}"
+    homepage: "https://github.com/razpinator/scaffo"
+    short_description: "Scaffolding tool for Go projects"
+    description: "Scaffolding tool for Go projects"
+    skip_upload: auto
