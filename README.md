@@ -16,6 +16,16 @@ bash builder.sh   # builds ./cmd and places the binary at /usr/local/bin/scaffo
 
 If you prefer to keep the binary locally, run `go build -o scaffo ./cmd` and invoke it via `./scaffo`.
 
+## Quick Start
+
+To get started immediately without any flags, simply run the tool interactively:
+
+```bash
+./scaffo
+```
+
+Select **Run** from the menu to execute the full pipeline using default settings.
+
 ## Usage
 
 ```bash
@@ -26,7 +36,7 @@ scaffo generate --template ./template-out --out ./new-app
 scaffo run --config scaffold.config.json --output ./template-out --out ./new-app
 ```
 
-You can also launch the Bubble Tea UI by running `go run ./cmd` and selecting a command interactively.
+You can also launch the Bubble Tea UI by running `scaffo` without arguments.
 
 ## Test The Functionality
 

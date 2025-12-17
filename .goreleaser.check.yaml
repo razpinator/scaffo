@@ -1,0 +1,17 @@
+version: 2
+pro: true
+builds:
+  - main: ./cmd
+    binary: scaffo
+    goos:
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+
+nfpms:
+  - formats:
+      - pkg
+    contents:
+      - src: ./scaffo
+        dst: /usr/local/bin/scaffo

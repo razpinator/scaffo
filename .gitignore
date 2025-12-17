@@ -26,3 +26,5 @@ testoutput/
 # Environment variables or sensitive data
 .env
 config.local.json
+# Added by goreleaser init:
+dist/
