@@ -12,6 +12,18 @@ Scaffo is a powerful yet simple CLI tool for scaffolding new projects from exist
 
 ## Installation
 
+### Homebrew (macOS/Linux)
+
+```bash
+brew install razpinator/tap/scaffo
+```
+
+### Winget (Windows)
+
+```bash
+winget install razpinator.scaffo
+```
+
 ### From Source
 
 ```bash
@@ -24,12 +36,6 @@ Or clone and build:
 git clone https://github.com/razpinator/scaffo.git
 cd scaffo
 go build -o scaffo cmd/main.go
-```
-
-### Homebrew
-
-```bash
-brew install razpinator/tap/scaffo
 ```
 
 ## Usage
