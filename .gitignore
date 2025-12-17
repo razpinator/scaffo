@@ -28,3 +28,4 @@ testoutput/
 config.local.json
 # Added by goreleaser init:
 dist/
+scaffo

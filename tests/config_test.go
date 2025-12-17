@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"scaffo/internal/app"
+	"github.com/razpinator/scaffo/internal/app"
 )
 
 func TestConfigSaveAndLoadJSON(t *testing.T) {

@@ -1,4 +1,4 @@
-module scaffo
+module github.com/razpinator/scaffo
 
 go 1.25.4
 

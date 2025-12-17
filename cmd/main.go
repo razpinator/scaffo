@@ -1,11 +1,11 @@
 package main
 
 import (
-"flag"
-"fmt"
-"os"
+	"flag"
+	"fmt"
+	"os"
 
-"scaffo/internal/app"
+	"github.com/razpinator/scaffo/internal/app"
 )
 
 const Version = "0.0.2"

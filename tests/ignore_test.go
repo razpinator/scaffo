@@ -3,7 +3,7 @@ package tests
 import (
 	"testing"
 
-	"scaffo/internal/app"
+	"github.com/razpinator/scaffo/internal/app"
 )
 
 func TestMatchIgnoreFolders(t *testing.T) {
