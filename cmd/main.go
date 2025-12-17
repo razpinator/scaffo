@@ -8,6 +8,8 @@ import (
 	"scaffo/internal/app"
 )
 
+const Version = "0.0.2"
+
 func main() {
 	if len(os.Args) < 2 {
 		app.Execute()
@@ -57,6 +59,8 @@ func main() {
 		fs.BoolVar(&copyConfig, "copy-config", false, "Copy scaffold.config.json to the generated project")
 		mustParse(fs, args)
 		app.RunCommand(configPath, sourceRoot, templatePath, outPath, copyConfig)
+	case "version", "--version", "-v":
+		fmt.Printf("scaffo version %s\n", Version)
 	default:
 		fmt.Println("Unknown command:", cmd)
 		printUsage()
@@ -78,4 +82,5 @@ func printUsage() {
 	fmt.Println("  build-template --config <path> [--output <dir>]")
 	fmt.Println("  generate --template <dir> --out <dir>")
 	fmt.Println("  run --config <path> [--output <tmp>] --out <dir>")
+	fmt.Println("  version")
 }
