@@ -97,7 +97,7 @@ winget:
     license_url: "https://github.com/razpinator/scaffo/blob/main/LICENSE"
     repository:
       owner: razpinator
-      name: winget-pkgs
+      name: winget-manifests
       token: "{{ .Env.WINGET_GITHUB_TOKEN }}"
     homepage: "https://github.com/razpinator/scaffo"
     short_description: "Scaffolding tool for Go projects"
