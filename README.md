@@ -1,68 +1,91 @@
 # Scaffo
 
-Scaffo is an experimental CLI for analyzing an existing codebase, inferring template variables, and producing reusable project templates. It wraps a small Bubble Tea UI as well as direct subcommands so you can bootstrap, inspect, and generate projects from a single tool.
+Scaffo is a powerful yet simple CLI tool for scaffolding new projects from existing local codebases. It automatically detects your source project's name and recursively replaces it with your new project's name—handling file paths, contents, and various casing styles (PascalCase, camelCase, snake_case, kebab-case, etc.).
 
-## Prerequisites
+## Features
 
-- Go 1.21 or newer
-- macOS or Linux shell (the provided `builder.sh` assumes a Unix-like environment)
+- **Zero Config Start**: Point it at a folder and go.
+- **Smart Replacement**: Automatically detects the source project name (e.g., `MyOldProject`) and replaces it with the new name (e.g., `NewApp`) everywhere.
+- **Case Preservation**: Handles variations like `myOldProject` -> `newApp`, `MY_OLD_PROJECT` -> `NEW_APP`, etc.
+- **Interactive Mode**: Easy-to-use terminal UI to select source folders.
+- **Configurable**: Use `scaffold.config.json` to ignore specific files or folders.
 
 ## Installation
 
-```bash
-# From the repository root
-bash builder.sh   # builds ./cmd and places the binary at /usr/local/bin/scaffo
-```
-
-If you prefer to keep the binary locally, run `go build -o scaffo ./cmd` and invoke it via `./scaffo`.
-
-## Quick Start
-
-To get started immediately without any flags, simply run the tool interactively:
+### From Source
 
 ```bash
-./scaffo
+go install github.com/razpinator/scaffo@latest
 ```
 
-Select **Run** from the menu to execute the full pipeline using default settings.
+Or clone and build:
+
+```bash
+git clone https://github.com/razpinator/scaffo.git
+cd scaffo
+go build -o scaffo cmd/main.go
+```
+
+### Homebrew
+
+```bash
+brew install razpinator/tap/scaffo
+```
 
 ## Usage
 
-```bash
-scaffo init --config scaffold.config.json --from /path/to/project
-scaffo analyze --config scaffold.config.json
-scaffo build-template --config scaffold.config.json --output ./template-out
-scaffo generate --template ./template-out --out ./new-app
-scaffo run --config scaffold.config.json --output ./template-out --out ./new-app
-```
+### Interactive Mode
 
-You can also launch the Bubble Tea UI by running `scaffo` without arguments.
-
-## Test The Functionality
-
-The following sequence exercises the main code paths end-to-end. Run these commands from the repo root:
+Simply run `scaffo` without arguments to launch the interactive UI:
 
 ```bash
-# 1. Verify dependencies and run unit tests (currently stubbed)
-go test ./...
-
-# 2. Build the CLI
- go build -o scaffo ./cmd
-
-# 3. Initialize a config pointed at a sample project root
- ./scaffo init --config scaffold.config.json --from .
-
-# 4. Analyze the generated config
- ./scaffo analyze --config scaffold.config.json
-
-# 5. Produce a template skeleton (writes to ./template-out by default)
- ./scaffo build-template --config scaffold.config.json --output ./template-out
-
-# 6. Generate a new project from the template
- ./scaffo generate --template ./template-out --out ./new-app
-
-# 7. (Optional) Run build+generate in one step
- ./scaffo run --config scaffold.config.json --output ./template-out --out ./new-app
+scaffo
 ```
 
-Adjust the `--from`, `--template`, and `--out` flags to point at real projects once you move beyond the sample data. Each step prints diagnostic output so you can confirm that the functionality behaves as expected.
+Select **Run** to choose a source folder from your current directory or enter a custom path.
+
+### CLI Commands
+
+#### Initialize Configuration
+
+Create a default `scaffold.config.json` for a source project:
+
+```bash
+scaffo init --from /path/to/source-project
+```
+
+#### Run Scaffolding
+
+Scaffold a new project directly:
+
+```bash
+scaffo run --from /path/to/source-project --out ./my-new-project
+```
+
+This will:
+1. Copy files from `/path/to/source-project` to `./my-new-project`.
+2. Rename files and directories matching the source project name.
+3. Replace content within files matching the source project name.
+
+## Configuration
+
+Scaffo uses `scaffold.config.json` to control the scaffolding process.
+
+```json
+{
+  "sourceRoot": ".",
+  "ignoreFolders": [".git", "node_modules", "dist"],
+  "ignoreFiles": [".DS_Store", "*.log"],
+  "staticFiles": ["**/*.png", "**/*.jpg"],
+  "variables": {
+    "PROJECT_NAME": {
+      "type": "string",
+      "required": true
+    }
+  }
+}
+```
+
+## License
+
+MIT
